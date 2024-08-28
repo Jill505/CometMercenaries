@@ -1,28 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CampSystem : MonoBehaviour
+[System.Serializable]
+public class CampSystem
 {
-    public List<Mercenaries> MercenariesList;
-    public List<Node> worldMap;
+    public List<Mercenaries> MercenariesList = new List<Mercenaries>();
+    public Mercenaries[] tempMercenariesList;
+    
+    public List<Node> worldMapNodeList = new List<Node>();
+    public Node[] tempWorldMapNodeList;
+
     public Mercenaries[] mercenariesSquad = new Mercenaries[3];
 
-    public float C_Coin = 0;
-    public float Kroan = 0;
-    public float popularity = 0;
+    public float C_Coin = -1;
+    public float Kroan = -1;
+    public float popularity = -1;
 
-    // Start is called before the first frame update
-    void Start()
+    public void syncTempData_ForSave()
     {
-
+        tempMercenariesList = MercenariesList.ToArray();
+        tempWorldMapNodeList = worldMapNodeList.ToArray();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+    public void syncTempData_ForLoad() {
+        MercenariesList = tempMercenariesList.ToList<Mercenaries>();
+        worldMapNodeList = tempWorldMapNodeList.ToList<Node>();
     }
 
     public void EditCharacterPattenOpen()
