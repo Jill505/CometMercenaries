@@ -74,9 +74,14 @@ public class Mercenaries
     public float MaxLevel = 40;
     public float exp = 0;
     public float nextLevelRequireExp = 10;
+    public float expertExp = 0;
 
     public float health = 10;
     public float maxHealth = 10;
+    public float speed = 20;
+
+    public float physicDefend = 0;
+    public float etherDefend = 0;
 
     //角色裝備
     public Gear HeadGear;//頭部裝備
@@ -86,7 +91,7 @@ public class Mercenaries
 
 
     //角色職業技能
-    public float characterPropotyPoints = 0;
+    public float characterPropotyPoints = 4;
     public float characterSkillPoints = 2; //初始擁有2
 
     //角色四大屬性
@@ -105,6 +110,70 @@ public class Mercenaries
     public float violentEnergyRadius = 2;
     public float gameSpeed = 0;//遊戲內速度 用於計算
     public float violentEnergyPointws = 0;
+
+    public delegate void voidDelegate();
+    public voidDelegate gearCalDeleate; 
+
+    public void calculateGearAddition()
+    {
+        gearCalDeleate = null;
+
+        //呼叫裝備訂閱計算內容
+        //gearCalDeleate += Gear.Function or what else bla bla bla
+
+        gearCalDeleate();
+    }
+
+    public void calculateMaxHealth()
+    {
+        //血量公式： 50+角色力量*0.8+裝備血量+技能加成
+        maxHealth = (int)(50 +characterStrength * 0.8f);
+    }
+
+    public void calculateSpeed()
+    {
+        //速度公式： 80+角色速度+裝備速度+
+        gameSpeed = (int)(80 + speed);
+    }
+
+    public void calculatePhysicDefend()
+    {
+        physicDefend = (int)(0 + characterStrength * 0.5f + characterAgility * 0.3f + characterMentle * 0.2f);
+    }
+
+    public void calculateEtherDefend()
+    {
+        etherDefend = (int)(0 + characterEther * 0.2f + characterAgility * 0.015f * characterMentle * 0.15f);
+    }
+
+
+    public void GainExp(int expNumber)
+    {
+        if (level <= MaxLevel)
+        {
+            exp += expNumber;
+            while (exp > nextLevelRequireExp)
+            {
+                exp -= nextLevelRequireExp;
+                LevelUp();
+            }
+        }
+        else
+        {
+            expertExp += expNumber;
+        }
+    }
+    public void LevelUp()
+    {
+        if (level % 2 == 0)
+        {
+            characterSkillPoints += 1;
+        }
+
+        characterPropotyPoints += 4;
+
+        level++;
+    }
 
 }
 

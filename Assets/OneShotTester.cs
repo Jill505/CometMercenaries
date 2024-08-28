@@ -37,4 +37,14 @@ public class OneShotTester : MonoBehaviour
     {
 
     }
+
+    public void GiveExp4()
+    {
+        GameObject.Find("GameCore").GetComponent<EditSystem>().mercenariesLoading.GainExp(4);
+    }
+
+    public void healthAllRecover()
+    {
+        GameObject.Find("GameCore").GetComponent<EditSystem>().mercenariesLoading.health = GameObject.Find("GameCore").GetComponent<EditSystem>().mercenariesLoading.maxHealth;
+    }
 }

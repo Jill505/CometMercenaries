@@ -9,6 +9,9 @@ public class EditSystem : MonoBehaviour
     public CampSystem campSystem;
     public Mercenaries mercenariesLoading;
 
+    public GameObject PropotyPatten;
+    public bool PropotyPattenActiveState = false;
+
     public int loadingMercenariesSort;
     public int MaxmentMercenareisNumberInCamp= 0;
 
@@ -27,9 +30,12 @@ public class EditSystem : MonoBehaviour
     public Text SyncTextMercenariesEtherDef;
 
     public Text SyncTextMercenariesStrength;
-    public Text SyncTextMercenareisEther;
+    public Text SyncTextMercenariesEther;
     public Text SyncTextMercenariesAgility;
     public Text SyncTextMercenariesMentle;
+
+    public Text SyncTextMercenariesPropotyPoints;
+    public Text SyncTextMercenariesSkillPoints;
 
     public Text SyncTextMercenariesSkillA;
     public Image SyncImageMercenariesSkillA;
@@ -68,6 +74,8 @@ public class EditSystem : MonoBehaviour
         loadingMercenariesSort = 0;
         Debug.Log("EditSystemTest：\n"+GameCore.Camp.MercenariesList);
         MaxmentMercenareisNumberInCamp = GameCore.Camp.MercenariesList.Count;
+
+        LoadMercenaries(0);
     }
 
     // Update is called once per frame
@@ -77,6 +85,26 @@ public class EditSystem : MonoBehaviour
         {
             SyncTextShowingLoadingMercenariesSort.text = loadingMercenariesSort.ToString();
             SyncTextMercenariesNameShow.text = mercenariesLoading.characterName;
+
+            SyncTextMercenariesStrength.text = "力量：" + mercenariesLoading.characterStrength.ToString();
+            SyncTextMercenariesEther.text = "智慧：" + mercenariesLoading.characterEther.ToString();
+            SyncTextMercenariesAgility.text = "敏捷：" + mercenariesLoading.characterAgility.ToString();
+            SyncTextMercenariesMentle.text = "精神：" + mercenariesLoading.characterMentle.ToString();
+
+            mercenariesLoading.calculatePhysicDefend();
+            SyncTextMercenariesPhysicDef.text = "物理防禦：" + mercenariesLoading.physicDefend.ToString();
+            mercenariesLoading.calculateEtherDefend();
+            SyncTextMercenariesEtherDef.text = "乙太防禦：" + mercenariesLoading.etherDefend.ToString() + "%";
+
+            mercenariesLoading.calculateMaxHealth();
+            SyncTextMercenariesHealth.text = "血量：" + mercenariesLoading.health.ToString() + "/" + mercenariesLoading.maxHealth.ToString();
+            SyncTextMercenariesLevel.text = "等級：" + mercenariesLoading.level;
+            SyncTextMercenariesExp.text = "經驗值：" + mercenariesLoading.exp + "/" + mercenariesLoading.nextLevelRequireExp;
+            mercenariesLoading.calculateSpeed();
+            SyncTextMercenariesSpeed.text = "速度：" + mercenariesLoading.speed;
+
+            SyncTextMercenariesPropotyPoints.text = "可用屬性點：\n" + mercenariesLoading.characterPropotyPoints;
+            SyncTextMercenariesSkillPoints.text = "可用技能點：\n" + mercenariesLoading.characterSkillPoints;
         }
     }
 
@@ -139,5 +167,68 @@ public class EditSystem : MonoBehaviour
         //{
         //    mercenariesLoading.name = editNamePatten.GetComponent<InputField>().text;
         //}
+    }
+
+    public void editPropotyButtonFunction()
+    {
+        PropotyPattenActiveState = !PropotyPattenActiveState;
+        PropotyPatten.SetActive(PropotyPattenActiveState);
+    }
+
+    public void AddStrength()
+    {
+        if (mercenariesLoading.characterPropotyPoints > 0)
+        {
+            mercenariesLoading.characterStrength += 1;
+            mercenariesLoading.characterPropotyPoints -= 1;
+            GameCore.Save();
+        }
+        else
+        {
+            PropotyPatten.SetActive(false);
+            PropotyPattenActiveState = false;
+        }
+    }
+    public void AddEther()
+    {
+        if (mercenariesLoading.characterPropotyPoints > 0)
+        {
+            mercenariesLoading.characterEther += 1;
+            mercenariesLoading.characterPropotyPoints -= 1;
+            GameCore.Save();
+        }
+        else
+        {
+            PropotyPatten.SetActive(false);
+            PropotyPattenActiveState = false;
+        }
+    }
+    public void AddAgility()
+    {
+        if (mercenariesLoading.characterPropotyPoints > 0)
+        {
+            mercenariesLoading.characterAgility += 1;
+            mercenariesLoading.characterPropotyPoints -= 1;
+            GameCore.Save();
+        }
+        else
+        {
+            PropotyPatten.SetActive(false);
+            PropotyPattenActiveState = false;
+        }
+    }
+    public void AddMentle()
+    {
+        if (mercenariesLoading.characterPropotyPoints > 0)
+        {
+            mercenariesLoading.characterMentle += 1;
+            mercenariesLoading.characterPropotyPoints -= 1;
+            GameCore.Save();
+        }
+        else
+        {
+            PropotyPatten.SetActive(false);
+            PropotyPattenActiveState = false;
+        }
     }
 }
