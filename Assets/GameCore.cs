@@ -8,6 +8,8 @@ using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.TextCore.LowLevel;
 using UnityEngine.UIElements.Experimental;
 using System.Linq;
+using JetBrains.Annotations;
+using UnityEditor.ShaderGraph.Internal;
 
 public class GameCore : MonoBehaviour
 {
@@ -15,6 +17,8 @@ public class GameCore : MonoBehaviour
 
     static public CampSystem Camp = new CampSystem();
     static public SaveSystem saveSystem = new SaveSystem();
+
+    public GameObject defultWeaponStore;
 
     private void Awake()
     {
@@ -72,6 +76,7 @@ public class Mercenaries
     //角色基礎屬性
     public float level = 0;
     public float MaxLevel = 40;
+    public float weightCapacity = 10;
     public float exp = 0;
     public float nextLevelRequireExp = 10;
     public float expertExp = 0;
@@ -82,6 +87,10 @@ public class Mercenaries
 
     public float physicDefend = 0;
     public float etherDefend = 0;
+
+    //角色武器
+    public weapon mainWeapon;
+    public weapon secondaryWeapon;
 
     //角色裝備
     public Gear HeadGear;//頭部裝備
@@ -145,6 +154,10 @@ public class Mercenaries
     {
         etherDefend = (int)(0 + characterEther * 0.2f + characterAgility * 0.015f * characterMentle * 0.15f);
     }
+    public void calculateCharacterWeightCapacity()
+    {
+        weightCapacity = (int)(30 + characterStrength * 0.8f + characterAgility * 0.2f + characterMentle * 0.3f);
+    }
 
 
     public void GainExp(int expNumber)
@@ -193,6 +206,8 @@ public class SaveSystem
         tempCamp.tempMercenariesList = GameCore.Camp.tempMercenariesList;
         tempCamp.tempWorldMapNodeList = GameCore.Camp.tempWorldMapNodeList;
 
+        tempCamp.tempWeaponStorehouseList = GameCore.Camp.tempWeaponStorehouseList;
+
         string saveFiles = JsonUtility.ToJson(tempCamp);
         File.WriteAllText(GameCore.campSyssSavePath,saveFiles);
 
@@ -231,6 +246,15 @@ public class SaveSystem
                 GameCore.Camp.worldMapNodeList= new List<Node>();
             }
 
+            if (swapCamp.tempWeaponStorehouseList != null)
+            {
+                GameCore.Camp.tempWeaponStorehouseList = swapCamp.tempWeaponStorehouseList;
+                GameCore.Camp.weaponStorehouseList = GameCore.Camp.tempWeaponStorehouseList.ToList<weapon>();
+            }
+            else
+            {
+                GameCore.Camp.weaponStorehouseList = new List<weapon>();
+            }
         }
         else
         {
@@ -244,6 +268,7 @@ public class SaveSystem
     }
 }
 
+[System.Serializable]
 public class Gear
 {
     public int GearType = 0; //0 = defult 1=頭部 2=身體 3=腳部 4=信物
@@ -264,24 +289,85 @@ public class Gear
 [System.Serializable]
 public class Item
 {
-    public float ItemType = 0;
-    ///
-    /// 0 = Defult 無用途
-    /// 1 = 攻擊性武器
-    ///
-    public float ItemSort = -1;// -1 =無效道具
+    public string ItemType = "defult item type"; //可以被用於子彈的類型？ 也許要建置一個excel表格
+    public float ItemSort = -1;//道具編號 可以快速找查對應資料位置
+    public string ItemImageName = "defultItemImage";
+    public string ItemName = "defultItemName";
 
     public float ItemAmount = 0;
-    public float ItemMaxmentStackAmount = 64;
+
+    public float eachWeightOfAItem = 0.1f;
+
+
 }
 
-[System.Serializable]
-public class weapon
-{
-    public float weaponName;
-    public float weaponBasicDamage = 0;
-    public string weaponType = "Defult Weapon Type";
-}
+    [System.Serializable]
+    public class weapon
+    {
+        public string weaponName = "defult weapon name";
+        public string weaponDescribtion = "no describtion";
+        public Color weaponNameColor = Color.white;
+
+        public int weaponRegisterNumber;//註冊序列
+    
+        public string weaponAmmoType = "noAmmoType";
+        public string weaponType = "defultWeaponType";
+        public string weaponImageName = "defultWeaponImage";
+        public string weaponBuffsString = "";
+
+        public float weaponRadius = 1f;//武器作用半徑
+
+        public int weaponMagzineSize = -1;//-1等於無消耗
+        public int weaponMagazineCount = -1;//-1 等於無消耗
+
+        public float weaponDamage;//需要額外計算
+
+        public float weaponBasicDamage = 0;//基礎傷害
+        //數據乘數
+        public float weaponStrengthMutiply = 0f;
+        public float weaponEtherMutiply = 0f;
+        public float weaponAgilityMutiply = 0f;
+        public float weaponMentleMutiply = 0f;
+
+        public string weaponDamageFormulaTelling;
+        public void calculateWeaponDamageFormulaTelling()
+        {
+            string printString = "";
+            printString += "武器名稱：" + weaponName +weaponBuffsString + "\n";
+            printString += "武器類型：" + weaponType + "\n";
+
+            if (weaponMagzineSize < 0)
+            {
+                printString += "此武器為無消耗類型";
+            }
+            else
+            {
+                printString += "武器子彈需求類型：" + weaponAmmoType + "\n";
+                printString += "武器彈匣量：" + weaponMagazineCount + "/" + weaponMagzineSize;
+            }
+     
+            printString += "造成傷害："+weaponBasicDamage;
+            if (weaponStrengthMutiply != 0f)
+            {
+                printString += "+ 角色力量*" + weaponStrengthMutiply;
+            }
+            if (weaponEtherMutiply != 0f)
+            {
+                printString += "+ 角色智慧*" + weaponEtherMutiply;
+            }
+            if (weaponAgilityMutiply != 0f)
+            {
+                printString += "+ 角色敏捷*" + weaponAgilityMutiply;
+            }
+            if (weaponMentleMutiply != 0f)
+            {
+                printString += "+ 角色精神*" + weaponMentleMutiply;
+            }
+        }
+
+        public float weaponAddDamageBuff = 0f;
+        public float weaponMutiplyDamageBuff = 1f;
+    }
 
 [System.Serializable]
 public class ViolentEnergyGear
@@ -290,6 +376,8 @@ public class ViolentEnergyGear
     public int violentGearSort = 0;
     public float violentGearRadius = 0;
     public float violentGearFunctionNumber = 0;
+
+    public float violentEnergyVPComsume = 1;
 
     //遊戲開始後 依照type/sort 給予按鈕dalegate
     public void propotyGive()

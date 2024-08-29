@@ -1,7 +1,12 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
+using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class EditSystem : MonoBehaviour
 {
@@ -11,6 +16,8 @@ public class EditSystem : MonoBehaviour
 
     public GameObject PropotyPatten;
     public bool PropotyPattenActiveState = false;
+    public GameObject WeaponPatten;
+    public bool WeaponPattenActiveState = false;
 
     public int loadingMercenariesSort;
     public int MaxmentMercenareisNumberInCamp= 0;
@@ -24,6 +31,7 @@ public class EditSystem : MonoBehaviour
 
     public Text SyncTextMercenariesHealth;
     public Text SyncTextMercenariesLevel;
+    public Text SyncTextMercenariesWeightCapacity;
     public Text SyncTextMercenariesExp;
     public Text SyncTextMercenariesSpeed;
     public Text SyncTextMercenariesPhysicDef;
@@ -72,7 +80,7 @@ public class EditSystem : MonoBehaviour
         ///Debug.Log(testArray.Length);
 
         loadingMercenariesSort = 0;
-        Debug.Log("EditSystemTest�G\n"+GameCore.Camp.MercenariesList);
+        Debug.Log("EditSystemTest：\n"+GameCore.Camp.MercenariesList);
         MaxmentMercenareisNumberInCamp = GameCore.Camp.MercenariesList.Count;
 
         LoadMercenaries(0);
@@ -86,25 +94,41 @@ public class EditSystem : MonoBehaviour
             SyncTextShowingLoadingMercenariesSort.text = loadingMercenariesSort.ToString();
             SyncTextMercenariesNameShow.text = mercenariesLoading.characterName;
 
-            SyncTextMercenariesStrength.text = "�O�q�G" + mercenariesLoading.characterStrength.ToString();
-            SyncTextMercenariesEther.text = "���z�G" + mercenariesLoading.characterEther.ToString();
-            SyncTextMercenariesAgility.text = "�ӱ��G" + mercenariesLoading.characterAgility.ToString();
-            SyncTextMercenariesMentle.text = "�믫�G" + mercenariesLoading.characterMentle.ToString();
+            SyncTextMercenariesStrength.text = "力量：" + mercenariesLoading.characterStrength.ToString();
+            SyncTextMercenariesEther.text = "智慧：" + mercenariesLoading.characterEther.ToString();
+            SyncTextMercenariesAgility.text = "敏捷：" + mercenariesLoading.characterAgility.ToString();
+            SyncTextMercenariesMentle.text = "精神：" + mercenariesLoading.characterMentle.ToString();
 
             mercenariesLoading.calculatePhysicDefend();
-            SyncTextMercenariesPhysicDef.text = "���z���m�G" + mercenariesLoading.physicDefend.ToString();
+            SyncTextMercenariesPhysicDef.text = "物理防禦：" + mercenariesLoading.physicDefend.ToString();
             mercenariesLoading.calculateEtherDefend();
-            SyncTextMercenariesEtherDef.text = "�A�Ө��m�G" + mercenariesLoading.etherDefend.ToString() + "%";
+            SyncTextMercenariesEtherDef.text = "乙太防禦：" + mercenariesLoading.etherDefend.ToString() + "%";
 
             mercenariesLoading.calculateMaxHealth();
-            SyncTextMercenariesHealth.text = "��q�G" + mercenariesLoading.health.ToString() + "/" + mercenariesLoading.maxHealth.ToString();
-            SyncTextMercenariesLevel.text = "���šG" + mercenariesLoading.level;
-            SyncTextMercenariesExp.text = "�g��ȡG" + mercenariesLoading.exp + "/" + mercenariesLoading.nextLevelRequireExp;
+            SyncTextMercenariesHealth.text = "血量：" + mercenariesLoading.health.ToString() + "/" + mercenariesLoading.maxHealth.ToString();
+            SyncTextMercenariesLevel.text = "等級：" + mercenariesLoading.level;
+            SyncTextMercenariesExp.text = "經驗值：" + mercenariesLoading.exp + "/" + mercenariesLoading.nextLevelRequireExp;
+            mercenariesLoading.calculateCharacterWeightCapacity();
+            SyncTextMercenariesWeightCapacity.text = "負重提供：" + mercenariesLoading.weightCapacity.ToString();
             mercenariesLoading.calculateSpeed();
-            SyncTextMercenariesSpeed.text = "�t�סG" + mercenariesLoading.speed;
+            SyncTextMercenariesSpeed.text = "速度：" + mercenariesLoading.speed;
 
-            SyncTextMercenariesPropotyPoints.text = "�i���ݩ��I�G\n" + mercenariesLoading.characterPropotyPoints;
-            SyncTextMercenariesSkillPoints.text = "�i�Χޯ��I�G\n" + mercenariesLoading.characterSkillPoints;
+            SyncTextMercenariesPropotyPoints.text = "可用屬性點：\n" + mercenariesLoading.characterPropotyPoints;
+            SyncTextMercenariesSkillPoints.text = "可用技能點：\n" + mercenariesLoading.characterSkillPoints;
+
+            SyncTextMercenariesMainWeapon.text = "主武器：\n" + mercenariesLoading.mainWeapon.weaponName;
+            SyncTextMercenariesSecondaryWeapon.text = "副武器：\n" + mercenariesLoading.secondaryWeapon.weaponName;
+        }
+        if (GameCore.saveSystem != null)
+        {
+            resourceSyncText.text = "克朗：" + GameCore.Camp.Kroan + "\n紀念幣：" + GameCore.Camp.C_Coin + "\n聲望：" + GameCore.Camp.popularity + "\n";
+
+            string weaponShow = "";
+            foreach (weapon loadingWeapon in GameCore.Camp.weaponStorehouseList)
+            {
+                weaponShow += loadingWeapon.weaponName + "\n";
+            }
+            weaponSyncText.text = weaponShow;
         }
     }
 
@@ -127,7 +151,7 @@ public class EditSystem : MonoBehaviour
         }
         else
         {
-            Debug.Log("�S���ħL�A�n���J�T�p");
+            Debug.Log("沒有傭兵你要載入三小");
         }
         //Sync All Information;}
     }
@@ -231,4 +255,74 @@ public class EditSystem : MonoBehaviour
             PropotyPattenActiveState = false;
         }
     }
+
+    public int selectingWeaponSort = -1; //0=主武器 1=副武器
+    public GameObject randomButtonPrefab;
+    public Transform layoutGroupTranfrom;
+    public void OpenCharacterWeaponEditPatten(int selectingSort)
+    {
+        WeaponPattenActiveState = !WeaponPattenActiveState;
+        selectingWeaponSort = selectingSort;
+
+        if (WeaponPattenActiveState)
+        {
+            //load All weapon
+            for (int i = 0; i < GameCore.Camp.tempWeaponStorehouseList.Length; i++)
+            {
+                GameObject swapWeaponButton = Instantiate(randomButtonPrefab);
+                swapWeaponButton.transform.parent = layoutGroupTranfrom;
+
+                int index = i;  // 创建一个局部变量，保存当前的索引
+                swapWeaponButton.transform.GetChild(0).gameObject.GetComponent<Button>().onClick.AddListener(() => EditCharacterWeapon(index));
+
+                swapWeaponButton.transform.GetChild(1).gameObject.GetComponent<Text>().text = GameCore.Camp.weaponStorehouseList[i].weaponName;
+            }
+        }
+        else
+        {
+            foreach (Transform child in layoutGroupTranfrom)
+            {
+                GameObject.Destroy(child.gameObject);
+            }
+        }
+
+        WeaponPatten.SetActive(WeaponPattenActiveState);
+    }
+    public void EditCharacterWeapon(int i)
+    {
+        //後面再加這個判斷 判斷該武器是否已經被其他傭兵持有 之類的 也許乾脆直接讓這個button失效?
+
+        if (selectingWeaponSort == 0)
+        {
+            mercenariesLoading.mainWeapon = GameCore.Camp.weaponStorehouseList[i];
+        }
+        else if (selectingWeaponSort == 1)
+        {
+            mercenariesLoading.secondaryWeapon = GameCore.Camp.weaponStorehouseList[i];
+        }
+        else
+        {
+            Debug.Log("你在衝三小 系統沒有選中任何一個武器類型 你怎麼進到這個判斷式裡面的");
+        }
+
+        //Edit Finish, close patten
+        foreach (Transform child in layoutGroupTranfrom)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+
+        WeaponPatten.SetActive(false);
+        WeaponPattenActiveState = false;
+
+        GameCore.Save();
+    }
+
+    ///
+    ///==============================
+    ///    Backpack Edit system
+    ///==============================
+    ///
+
+    public Text resourceSyncText;
+    public Text weaponSyncText;
 }

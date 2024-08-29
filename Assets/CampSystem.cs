@@ -13,6 +13,9 @@ public class CampSystem
     public List<Node> worldMapNodeList = new List<Node>();
     public Node[] tempWorldMapNodeList;
 
+    public List<weapon> weaponStorehouseList = new List<weapon>();
+    public weapon[] tempWeaponStorehouseList;
+
     public Mercenaries[] mercenariesSquad = new Mercenaries[3];
 
     public float C_Coin = -1;
@@ -23,10 +26,12 @@ public class CampSystem
     {
         tempMercenariesList = MercenariesList.ToArray();
         tempWorldMapNodeList = worldMapNodeList.ToArray();
+        tempWeaponStorehouseList = weaponStorehouseList.ToArray();
     }
     public void syncTempData_ForLoad() {
         MercenariesList = tempMercenariesList.ToList<Mercenaries>();
         worldMapNodeList = tempWorldMapNodeList.ToList<Node>();
+        weaponStorehouseList = tempWeaponStorehouseList.ToList<weapon>();
     }
 
     public void EditCharacterPattenOpen()

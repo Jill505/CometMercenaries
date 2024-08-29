@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class OneShotTester : MonoBehaviour
 {
@@ -46,5 +47,61 @@ public class OneShotTester : MonoBehaviour
     public void healthAllRecover()
     {
         GameObject.Find("GameCore").GetComponent<EditSystem>().mercenariesLoading.health = GameObject.Find("GameCore").GetComponent<EditSystem>().mercenariesLoading.maxHealth;
+    }
+
+    public InputField weaponGetInputField;
+    public void getNewWeapon()
+    {
+        int weapNum;
+        string weapStr = weaponGetInputField.text;
+        if (int.TryParse(weapStr,out weapNum))
+        {
+            weapon newWeapon = gCore.defultWeaponStore.GetComponent<SystemDefultWeaponHouse>().defultWeapons[weapNum];
+
+            GameCore.Camp.weaponStorehouseList.Add(newWeapon);
+            GameCore.Save();
+            weaponGetInputField.text = "";
+
+            Debug.Log("已加入新武器至倉庫");
+            Debug.Log(JsonUtility.ToJson(newWeapon));
+        }
+        else
+        {
+            Debug.Log("你給我看這三小");
+        }
+
+    }
+
+    public weapon editingWeapon;
+    public void weaponOpen()
+    {
+        int weapNum;
+        string weapStr = weaponGetInputField.text;
+        if (int.TryParse(weapStr, out weapNum))
+        {
+            editingWeapon = GameCore.Camp.weaponStorehouseList[weapNum];
+        }
+        else
+        {
+            Debug.Log("你給我看這三小");
+        }
+    }
+    public void endEditingWeapon()
+    {
+        int weapNum;
+        string weapStr = weaponGetInputField.text;
+        if (int.TryParse(weapStr, out weapNum))
+        {
+            GameCore.Camp.weaponStorehouseList[weapNum] = editingWeapon;
+            GameCore.Save();
+
+            weaponGetInputField.text = "";
+
+            Debug.Log("成功編輯武器");
+        }
+        else
+        {
+            Debug.Log("你給我看這三小");
+        }
     }
 }
