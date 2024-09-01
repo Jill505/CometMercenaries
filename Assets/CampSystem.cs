@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,9 @@ public class CampSystem
     public List<Node> worldMapNodeList = new List<Node>();
     public Node[] tempWorldMapNodeList;
 
+    public List<GameObject> nodeGameObjecgts  = new List<GameObject>();
+    public NodeFile[] tempWorldMapNodeFile;
+
     public List<weapon> weaponStorehouseList = new List<weapon>();
     public weapon[] tempWeaponStorehouseList;
 
@@ -25,8 +29,38 @@ public class CampSystem
     public void syncTempData_ForSave()
     {
         tempMercenariesList = MercenariesList.ToArray();
-        tempWorldMapNodeList = worldMapNodeList.ToArray();
+        tempWorldMapNodeList = worldMapNodeList.ToArray();//這行基本沒用了
         tempWeaponStorehouseList = weaponStorehouseList.ToArray();
+
+
+        //物件轉Node list
+        List<NodeFile> nodeFiles = new List<NodeFile>();
+
+        foreach (Node eachNode in worldMapNodeList)
+        {
+            NodeFile swapFile = new NodeFile();
+
+            swapFile.MapXNum = eachNode.MapXNum;
+            swapFile.MapYNum = eachNode.MapYNum;
+
+            swapFile.chunkInfo = eachNode.chunkInfo;
+            swapFile.chunkViolentEnergyInfo = eachNode.chunkViolentEnergyInfo;
+            swapFile.chunkItself = eachNode.chunkItself;
+
+            swapFile.nodeType  = eachNode.nodeType;
+            swapFile.nodeFaction = eachNode.nodeFaction;
+            swapFile.nodeName = eachNode.nodeName;
+
+            List<int> linkerInt = new List<int>();
+            foreach (Node linkingNodes in eachNode.linkingNodes)
+            {
+                linkerInt.Add(linkingNodes.NodeSort);
+            }
+            swapFile.linkingNodesSort = linkerInt.ToArray();
+
+            nodeFiles.Add(swapFile);
+        }
+        tempWorldMapNodeFile = nodeFiles.ToArray();
     }
     public void syncTempData_ForLoad() {
         MercenariesList = tempMercenariesList.ToList<Mercenaries>();

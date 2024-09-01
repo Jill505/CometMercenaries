@@ -325,4 +325,18 @@ public class EditSystem : MonoBehaviour
 
     public Text resourceSyncText;
     public Text weaponSyncText;
+
+
+    ///
+    /// =============================
+    ///      Node Edit System
+    /// =============================
+    ///
+
+    public Node nodeLoading;
+
+    public void loadThisNode(Node nodesLoad)
+    {
+        nodeLoading = nodesLoad;
+    }
 }

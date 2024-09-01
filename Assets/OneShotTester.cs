@@ -104,4 +104,12 @@ public class OneShotTester : MonoBehaviour
             Debug.Log("你給我看這三小");
         }
     }
+
+    public void resetTheNodeSystem()
+    {
+        GameObject.Find("GameCore").GetComponent<GameCore>().defultNodeStore.GetComponent<SystemDefultNodeHouse>().nodeGiveInitialization();
+        GameCore.Camp.worldMapNodeList = GameObject.Find("GameCore").GetComponent<GameCore>().defultNodeStore.GetComponent<SystemDefultNodeHouse>().defultNodes;
+
+        GameCore.Save();
+    }
 }
