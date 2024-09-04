@@ -57,6 +57,55 @@ MonoBehaviour:
     MapXNum: 0
     MapYNum: 0
     linkingNodesSort: 
+    ChunkInfoArrayCol:
+    - chunkRow:
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 1
+        chunkType: defultChunkType
+        itemFieldProvideNumber: 0
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 1
+        chunkType: defultChunkType
+        itemFieldProvideNumber: 0
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 1
+        chunkType: defultChunkType
+        itemFieldProvideNumber: 0
+    - chunkRow:
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 1
+        chunkType: defultChunkType
+        itemFieldProvideNumber: 0
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 1
+        chunkType: defultChunkType
+        itemFieldProvideNumber: 0
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 1
+        chunkType: defultChunkType
+        itemFieldProvideNumber: 0
+    - chunkRow:
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 1
+        chunkType: defultChunkType
+        itemFieldProvideNumber: 0
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 1
+        chunkType: defultChunkType
+        itemFieldProvideNumber: 0
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 1
+        chunkType: defultChunkType
+        itemFieldProvideNumber: 0
     nodeType: nonType
     nodeFaction: myFaction
     nodeName: "\u96F6\u865F\u7BC0\u9EDE"
@@ -64,13 +113,47 @@ MonoBehaviour:
     MapXNum: 0
     MapYNum: 0
     linkingNodesSort: 0200000000000000
+    ChunkInfoArrayCol:
+    - chunkRow:
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 0
+        chunkType: 
+        itemFieldProvideNumber: 0
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 0
+        chunkType: 
+        itemFieldProvideNumber: 0
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 0
+        chunkType: 
+        itemFieldProvideNumber: 0
+    - chunkRow:
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 0
+        chunkType: 
+        itemFieldProvideNumber: 0
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 0
+        chunkType: 
+        itemFieldProvideNumber: 0
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 0
+        chunkType: 
+        itemFieldProvideNumber: 0
     nodeType: nonType
     nodeFaction: nonFaction
     nodeName: "\u5C0F\u5E74\u591C"
   - NodeSort: 2
     MapXNum: 0
     MapYNum: 0
-    linkingNodesSort: 0100000000000000
+    linkingNodesSort: 01000000
+    ChunkInfoArrayCol: []
     nodeType: nonType
     nodeFaction: nonFaction
     nodeName: "\u5C0F\u6C8F\u6D1B"
@@ -78,6 +161,38 @@ MonoBehaviour:
     MapXNum: 0
     MapYNum: 0
     linkingNodesSort: 01000000
+    ChunkInfoArrayCol:
+    - chunkRow:
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 0
+        chunkType: 
+        itemFieldProvideNumber: 0
     nodeType: nonType
     nodeFaction: nonFaction
     nodeName: "\u8D0B\u9E7F\u838A"
+  - NodeSort: 4
+    MapXNum: 0
+    MapYNum: 0
+    linkingNodesSort: 01000000
+    ChunkInfoArrayCol:
+    - chunkRow:
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 0
+        chunkType: 
+        itemFieldProvideNumber: 0
+    - chunkRow:
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 0
+        chunkType: 
+        itemFieldProvideNumber: 0
+      - myX: 0
+        myY: 0
+        myViolentEnergy: 0
+        chunkType: 
+        itemFieldProvideNumber: 0
+    nodeType: nonType
+    nodeFaction: nonFaction
+    nodeName: "\u8AFE\u59B2\u7684\u8001\u5BB6"

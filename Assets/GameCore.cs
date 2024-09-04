@@ -10,9 +10,40 @@ using UnityEngine.UIElements.Experimental;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEditor.ShaderGraph.Internal;
+using Unity.VisualScripting;
 
 public class GameCore : MonoBehaviour
 {
+
+
+    //
+    //                       _oo0oo_
+    //                      o8888888o
+    //                      88" . "88
+    //                      (| -_- |)
+    //                      0\  =  /0
+    //                    ___/`---'\___
+    //                  .' \\|     |// '.
+    //                 / \\|||  :  |||// \
+    //                / _||||| -:- |||||- \
+    //               |   | \\\  -  /// |   |
+    //               | \_|  ''\---/''  |_/ |
+    //               \  .-\__  '-'  ___/-. /
+    //             ___'. .'  /--.--\  `. .'___
+    //          ."" '<  `.___\_<|>_/___.' >' "".
+    //         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+    //         \  \ `_.   \_ __\ /__ _/   .-` /  /
+    //     =====`-.____`.___ \_____/___.-`___.-'=====
+    //                       `=---='
+    //
+    //
+    //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //
+    //               佛祖保佑         永無BUG
+    //
+    //
+    //
+
     static public string campSyssSavePath;
 
     static public CampSystem Camp = new CampSystem();
@@ -260,15 +291,31 @@ public class SaveSystem
                 /// 4.tempWorldMapNodeFile = 新node file.toArray()
                 ///
 
+                Debug.Log("現在File中的資料量"+GameCore.Camp.tempWorldMapNodeFile.Length);
+                Debug.Log("預設系統中的資料量" + GameObject.Find("GameCore").GetComponent<GameCore>().defultNodeStore.GetComponent<SystemDefultNodeHouse>().defultNodeFiles.Count);
+
+                if (GameCore.Camp.tempWorldMapNodeFile.Length < GameObject.Find("GameCore").GetComponent<GameCore>().defultNodeStore.GetComponent<SystemDefultNodeHouse>().defultNodeFiles.Count)
+                {
+                    Debug.Log("這裡少了些節點");
+                    List<NodeFile> swapNodeFiles = new List<NodeFile>(GameCore.Camp.tempWorldMapNodeFile);
+
+                    for (int i = GameCore.Camp.tempWorldMapNodeFile.Length; i < GameObject.Find("GameCore").GetComponent<GameCore>().defultNodeStore.GetComponent<SystemDefultNodeHouse>().defultNodeFiles.Count; i++)
+                    {
+                        swapNodeFiles.Add(GameObject.Find("GameCore").GetComponent<GameCore>().defultNodeStore.GetComponent<SystemDefultNodeHouse>().defultNodeFiles[i]);
+                    }
+
+                    GameCore.Camp.tempWorldMapNodeFile = swapNodeFiles.ToArray();
+                }
 
                 //GameCore.Camp.worldMapNodeList = GameCore.Camp.tempWorldMapNodeList.ToList<Node>();
 
                 ///
-                GameCore.Camp.worldMapNodeList.Clear();
+                //GameCore.Camp.worldMapNodeList.Clear();
 
                 int counter = 0;
                 foreach (NodeFile NF in GameCore.Camp.tempWorldMapNodeFile)
                 {
+                    //Debug.Log("載入節點中");
                     GameObject nodeObject = new GameObject("Node_" + counter);
                     Node swapNode = nodeObject.AddComponent<Node>();
 
@@ -281,7 +328,7 @@ public class SaveSystem
 
                     swapNode.chunkInfo = NF.chunkInfo;
                     swapNode.chunkViolentEnergyInfo = NF.chunkViolentEnergyInfo;
-                    swapNode.chunkItself = NF.chunkItself;
+                    swapNode.ChunkInfoArrayCol = NF.ChunkInfoArrayCol;
 
                     swapNode.NodeSort = NF.NodeSort;
 
@@ -291,6 +338,27 @@ public class SaveSystem
 
                     GameCore.Camp.worldMapNodeList.Add(swapNode);
 
+                    /*
+                    int counterCol = 0;
+                    foreach (chunk[] chunkLoading in NF.chunkItself)
+                    {
+                        int counterRow = 0;
+                        foreach (chunk chunkLoading2 in chunkLoading)
+                        {
+                            if (chunkLoading2.chunkType == "")
+                            {
+                                chunkLoading2.chunkType = "DefultType";
+                            }
+                            chunkLoading2.myX = counterRow;
+                            chunkLoading2.myY = counterCol;
+                            counterRow++;
+                        }
+                        counterCol++;
+                    }
+                    */
+
+
+
                     counter++;
                 }
 
@@ -298,13 +366,22 @@ public class SaveSystem
                 counter = 0;
                 foreach (NodeFile NF in swapCamp.tempWorldMapNodeFile)
                 {
+                    //Debug.Log(counter + "times run the foreach");
+                    //Debug.Log(JsonUtility.ToJson(GameCore.Camp.worldMapNodeList));
                     int secondCounter = 0;
                     foreach (int swapLinkingNode in NF.linkingNodesSort)
                     {
+                        if (swapLinkingNode >= GameCore.Camp.worldMapNodeList.Count)
+                        {
+                            Debug.Log("超出選擇範圍");
+                            break;
+                        }
+
                         //GameCore.Camp.worldMapNodeList[counter].linkingNodes[secondCounter] = GameCore.Camp.worldMapNodeList[swapLinkingNode];
                         GameCore.Camp.worldMapNodeList[counter].linkingNodes.Add(GameCore.Camp.worldMapNodeList[swapLinkingNode]);
                         secondCounter++;
                     }
+                    counter++;
                 }
                 ///
             }
@@ -319,17 +396,14 @@ public class SaveSystem
                 GameCore.Save();
             }
 
-            Debug.Log("I executed");
             if (swapCamp.tempWeaponStorehouseList != null)
             {
                 GameCore.Camp.tempWeaponStorehouseList = swapCamp.tempWeaponStorehouseList;
                 GameCore.Camp.weaponStorehouseList = GameCore.Camp.tempWeaponStorehouseList.ToList<weapon>();
-                Debug.Log("I executed2");
             }
             else
             {
                 GameCore.Camp.weaponStorehouseList = new List<weapon>();
-                Debug.Log("I executed3");
             }
         }
         else
@@ -343,7 +417,6 @@ public class SaveSystem
         }
     }
 }
-
 [System.Serializable]
 public class Gear
 {
@@ -366,6 +439,7 @@ public class Gear
 public class Item
 {
     public string ItemName = "defultItemName";
+    public string ItemNarrative = "defult Narrowtive";
     public string ItemType = "defult item type"; //可以被用於子彈的類型？ 也許要建置一個excel表格
     public float ItemSort = -1;//道具編號 可以快速找查對應資料位置
     public string ItemImageName = "defultItemImage";
@@ -468,11 +542,16 @@ public class ViolentEnergyGear
 [System.Serializable]
 public class chunk
 {
-        float anyway;
+    float anyway;
     public float myX;
     public float myY;
+    public float myViolentEnergy = 1;
 
     public string chunkType = "defultChunkType";
+    /// <summary>
+    /// chunkType = N/A
+    /// 
+    /// </summary>
     public int itemFieldProvideNumber = 0;
 
     public void setDefult()
@@ -481,5 +560,21 @@ public class chunk
         {
             itemFieldProvideNumber = 50;
         }
+        else if (chunkType == "playerBackPack")
+        {
+            itemFieldProvideNumber = 30;
+        }
+    }
+
+    public Item[] itemContext = new Item[0];
+    public void itemExtend()
+    {
+        List<Item> itemSwap = new List<Item>(itemContext);
+        for (int i = itemSwap.Count; i < itemFieldProvideNumber; i++)
+        {
+            Item nullItem = new Item() { ItemType = "blankType" };
+            itemSwap.Add(nullItem);
+        }
+        itemContext = itemSwap.ToArray();
     }
 }

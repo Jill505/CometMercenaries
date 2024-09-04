@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
+using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,6 +27,8 @@ public class CampSystem
     public float Kroan = -1;
     public float popularity = -1;
 
+    public List<Item> inspactAllItemPlayerHave = new List<Item>();
+
     public void syncTempData_ForSave()
     {
         tempMercenariesList = MercenariesList.ToArray();
@@ -45,11 +48,13 @@ public class CampSystem
 
             swapFile.chunkInfo = eachNode.chunkInfo;
             swapFile.chunkViolentEnergyInfo = eachNode.chunkViolentEnergyInfo;
-            swapFile.chunkItself = eachNode.chunkItself;
+            swapFile.ChunkInfoArrayCol = eachNode.ChunkInfoArrayCol;
 
             swapFile.nodeType  = eachNode.nodeType;
             swapFile.nodeFaction = eachNode.nodeFaction;
             swapFile.nodeName = eachNode.nodeName;
+
+            swapFile.NodeSort = eachNode.NodeSort;
 
             List<int> linkerInt = new List<int>();
             foreach (Node linkingNodes in eachNode.linkingNodes)

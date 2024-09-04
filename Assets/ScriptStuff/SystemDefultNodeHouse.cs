@@ -8,7 +8,7 @@ using UnityEngine;
 public class SystemDefultNodeHouse : MonoBehaviour
 {
     public List<GameObject> defultNodeGameObjects = new List<GameObject>();
-    public List<Node> defultNodes = new List<Node>();
+    public List<Node> defultNodes = new List<Node>(); //basicly useless
     public List<NodeFile> defultNodeFiles = new List<NodeFile>();
     // Start is called before the first frame update
     void Start()
@@ -42,7 +42,7 @@ public class SystemDefultNodeHouse : MonoBehaviour
 
             swapNode.chunkInfo = NF.chunkInfo;
             swapNode.chunkViolentEnergyInfo = NF.chunkViolentEnergyInfo;
-            swapNode.chunkItself = NF.chunkItself;
+            swapNode.ChunkInfoArrayCol = NF.ChunkInfoArrayCol;
 
             swapNode.NodeSort = NF.NodeSort;
 

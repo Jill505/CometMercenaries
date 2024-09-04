@@ -10,6 +10,7 @@ public class OneShotTester : MonoBehaviour
     void Start()
     {
         gCore = GameObject.Find("GameCore").GetComponent<GameCore>();
+        //resetTheNodeSystem();
     }
 
     // Update is called once per frame
@@ -110,6 +111,22 @@ public class OneShotTester : MonoBehaviour
         GameObject.Find("GameCore").GetComponent<GameCore>().defultNodeStore.GetComponent<SystemDefultNodeHouse>().nodeGiveInitialization();
         GameCore.Camp.worldMapNodeList = GameObject.Find("GameCore").GetComponent<GameCore>().defultNodeStore.GetComponent<SystemDefultNodeHouse>().defultNodes;
 
+        //清空每一個格子
+        foreach (var node in GameCore.Camp.worldMapNodeList)
+        {
+            foreach (var chunk in node.ChunkInfoArrayCol) 
+            {
+                foreach (var chunks in chunk.chunkRow)
+                {
+                    chunks.itemExtend();
+                }
+            }
+        }
+
         GameCore.Save();
+    }
+    public void NodeLengthExtend()
+    {
+
     }
 }

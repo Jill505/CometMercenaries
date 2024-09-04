@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Xml;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Rendering;
@@ -84,6 +87,8 @@ public class EditSystem : MonoBehaviour
         MaxmentMercenareisNumberInCamp = GameCore.Camp.MercenariesList.Count;
 
         LoadMercenaries(0);
+        loadAllNodeItemInspactor();
+
     }
 
     // Update is called once per frame
@@ -129,6 +134,12 @@ public class EditSystem : MonoBehaviour
                 weaponShow += loadingWeapon.weaponName + "\n";
             }
             weaponSyncText.text = weaponShow;
+        }
+
+        if (campSystem != null)
+        {
+            checkAllSpace();
+            //Load Alll Item？
         }
     }
 
@@ -326,7 +337,7 @@ public class EditSystem : MonoBehaviour
     public Text resourceSyncText;
     public Text weaponSyncText;
 
-
+    public int backPackNumber = 0;
     ///
     /// =============================
     ///      Node Edit System
@@ -334,9 +345,130 @@ public class EditSystem : MonoBehaviour
     ///
 
     public Node nodeLoading;
+    public int nodeSort;
+    
 
-    public void loadThisNode(Node nodesLoad)
+    public void loadLastNode()//-
     {
-        nodeLoading = nodesLoad;
+        nodeSort -= 1;
+        if (nodeSort < 0)
+        {
+            nodeSort = GameCore.Camp.worldMapNodeList.Count -1;
+        }
+        loadThisNode();
+    }
+    public void loadNextNode()//+
+    {
+        nodeSort += 1;
+        if (nodeSort >= GameCore.Camp.worldMapNodeList.Count)
+        {
+            nodeSort = 0;
+        }
+        loadThisNode();
+    }
+    public swapInspactNodeArray[] nodeRow = new swapInspactNodeArray[3];
+
+    public void loadAllChunkInfo()
+    {
+        int count = 0;
+        foreach (swapInspactNodeArray chunkLoading in nodeLoading.ChunkInfoArrayCol)
+        {
+            int count2 = 0;
+            foreach (chunk chunkLoading2 in chunkLoading.chunkRow)
+            {
+                nodeRow[count].chunkRow[count2] = chunkLoading2;
+                count2++;
+            }
+            count++;
+        }
+    }
+
+    public void loadThisNode()
+    {
+        if (GameCore.Camp.worldMapNodeList.Count != 0)
+        {
+            nodeLoading = GameCore.Camp.worldMapNodeList[nodeSort];
+            loadAllChunkInfo();
+        }
+        else
+        {
+            Debug.Log("沒有節點你要載入三小");
+        }
+    }
+
+    public void loadNodeItem()
+    {
+        
+    }
+
+
+    public void loadAllNodeItemInspactor()
+    {
+        int emptySpace = 0;
+        List<Item> itemInspactList = new List<Item>();
+        List<Item> itemStore = GameObject.Find("GameCore").GetComponent<GameCore>().defultItemStore.GetComponent<SystemDefultItemHouse>().defultItems;
+        for (int i = 0; i <  itemStore.Count; i++)
+        {
+            Item swapItem = new Item() { 
+            ItemName = itemStore[i].ItemName,
+            ItemSort = itemStore[i].ItemSort,
+            ItemType = itemStore[i].ItemType,
+            };
+            itemInspactList.Add(swapItem);
+        }
+
+        foreach (Node nodeLoad in campSystem.worldMapNodeList)
+        {
+            if (nodeLoad.nodeFaction == "myFaction")
+            {
+                //節點屬於玩家 統計其中的內容)
+                foreach (swapInspactNodeArray nodeArray in nodeLoad.ChunkInfoArrayCol)
+                {
+                    foreach (chunk chunkLoad in nodeArray.chunkRow)
+                    {
+                        if (chunkLoad.itemFieldProvideNumber > 0)
+                        {
+                            //Load
+                            //喔幹我真的不懂
+                            for (int i = 0; i < chunkLoad.itemFieldProvideNumber; i++)
+                            {
+                                if (chunkLoad.itemContext.Length != 0)
+                                {
+                                    if (chunkLoad.itemContext[i].ItemSort >= 0)
+                                    {
+                                        itemInspactList[(int)chunkLoad.itemContext[i].ItemSort].ItemAmount += chunkLoad.itemContext[i].ItemAmount;
+                                    }
+                                    else
+                                    {
+                                        emptySpace++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Debug.Log("空白格子：" + emptySpace);
+        Debug.Log(JsonUtility.ToJson(itemInspactList));
+        for (int i = 0; i < itemInspactList.Count; i++)
+        {
+            Debug.Log(itemInspactList[i].ItemName +"數量："+itemInspactList[i].ItemAmount);
+        }
+    }
+        /*//這個絕對要刪掉喔 留在這邊只是方便複製而已
+        campSystem.inspactAllItemPlayerHave.Clear();
+        for (int i = 0; i < backPackNumber; i++)
+        {
+            Item blankItem = new Item() { ItemType = "blankType" };
+            campSystem.inspactAllItemPlayerHave.Add(blankItem);
+        }*/
+
+    public void checkAllSpace()
+    {
+        foreach (Node nodeInspacting in campSystem.worldMapNodeList)
+        {
+            backPackNumber += nodeInspacting.BoxSpaceProvide;
+        }
     }
 }

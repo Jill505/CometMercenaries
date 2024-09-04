@@ -11,13 +11,29 @@ public class Node : MonoBehaviour
         //Load informations
     }
 
+    private void Start()
+    {
+        calculateBoxSpace();
+    }
+
+    public swapInspactNodeArray[] ChunkInfoArrayCol;
+    public void Update()
+    {
+        //優先優化
+        //calculateBoxSpace();
+    }
+
     public int NodeSort = -1;//在預設序列中的位置
 
     public int MapXNum = 5;
     public int MapYNum = 5;
+
+    public int chunkX = 1;
+    public int chunkY = 1;
+
     public int[][] chunkInfo;
     public int[][] chunkViolentEnergyInfo;
-    public chunk[][] chunkItself;
+    //public chunk[][] chunkItself;
 
     public List<Node> linkingNodes = new List<Node>();
     
@@ -32,9 +48,37 @@ public class Node : MonoBehaviour
 
     public void syncNodeFile()
     {
+    }
+
+    public void calculateBoxSpace()
+    {
+        BoxSpaceProvide = 0;
+        foreach (swapInspactNodeArray chunkArray in ChunkInfoArrayCol)
+        {
+            foreach (chunk chunkLoading in chunkArray.chunkRow)
+            {
+                BoxSpaceProvide += chunkLoading.itemFieldProvideNumber;
+                chunkLoading.itemExtend();
+            }
+        }
+    }
+    /*
+    public void setDefult()
+    {
+        foreach (NodeFileChunkIntArrayRow[] colChunk in ChunkInfoArrayCol)//列
+        {
+            foreach (chunk rowChunk in colChunk)//行
+            {
+                rowChunk.setDefult();
+            }
+        }
+    }*/
+    //互動功能往下寫
+    public int BoxSpaceProvide = 0;
+    public void calculateBoxSpaceProvide()
+    {
 
     }
-    //互動功能往下寫
 }
 
 
@@ -47,9 +91,10 @@ public class NodeFile
     public int MapYNum = 5;
     public int[][] chunkInfo;
     public int[][] chunkViolentEnergyInfo;
-    public chunk[][] chunkItself;
 
     public int[] linkingNodesSort;//連結中的節點
+
+    public swapInspactNodeArray[] ChunkInfoArrayCol;
 
     public string nodeType = "noCertainType";//if belong to player 可控制
     public string nodeFaction = "noFaction";
@@ -60,4 +105,9 @@ public class NodeFile
 
     }
 
+}
+[System.Serializable]
+public class swapInspactNodeArray
+{
+    public chunk[] chunkRow = new chunk[3];
 }

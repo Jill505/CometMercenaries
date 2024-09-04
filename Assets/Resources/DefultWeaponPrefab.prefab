@@ -127,3 +127,23 @@ MonoBehaviour:
     weaponDamageFormulaTelling: 
     weaponAddDamageBuff: 0
     weaponMutiplyDamageBuff: 0
+  - weaponName: "\u86CB\u72C0\u80F1"
+    weaponDescribtion: "\u67D0\u500B\u4EBA\u9084\u5728\u6C23"
+    weaponNameColor: {r: 0.2974624, g: 0.87169814, b: 0.110195786, a: 0}
+    weaponRegisterNumber: 4
+    weaponAmmoType: BatteryType I
+    weaponType: EtherSniper
+    weaponImageName: DefultImage
+    weaponBuffsString: 
+    weaponRadius: 2
+    weaponMagzineSize: -1
+    weaponMagazineCount: -1
+    weaponDamage: 0
+    weaponBasicDamage: 200
+    weaponStrengthMutiply: 0
+    weaponEtherMutiply: 2.2
+    weaponAgilityMutiply: 1.2
+    weaponMentleMutiply: 0
+    weaponDamageFormulaTelling: 
+    weaponAddDamageBuff: 0
+    weaponMutiplyDamageBuff: 0
