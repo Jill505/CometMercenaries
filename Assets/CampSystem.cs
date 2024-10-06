@@ -46,6 +46,9 @@ public class CampSystem
             swapFile.MapXNum = eachNode.MapXNum;
             swapFile.MapYNum = eachNode.MapYNum;
 
+            swapFile.NodeTransformX = eachNode.NodeTransformX;
+            swapFile.NodeTransformY = eachNode.NodeTransformY;
+
             swapFile.chunkInfo = eachNode.chunkInfo;
             swapFile.chunkViolentEnergyInfo = eachNode.chunkViolentEnergyInfo;
             swapFile.ChunkInfoArrayCol = eachNode.ChunkInfoArrayCol;

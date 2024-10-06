@@ -40,6 +40,12 @@ public class SystemDefultNodeHouse : MonoBehaviour
             swapNode.MapXNum = NF.MapXNum;
             swapNode.MapYNum = NF.MapYNum;
 
+            swapNode.NodeTransformX = NF.NodeTransformX;
+            swapNode.NodeTransformY = NF.NodeTransformY;
+
+            swapNode.chunkX = NF.chunkX; 
+            swapNode.chunkY = NF.chunkY;
+
             swapNode.chunkInfo = NF.chunkInfo;
             swapNode.chunkViolentEnergyInfo = NF.chunkViolentEnergyInfo;
             swapNode.ChunkInfoArrayCol = NF.ChunkInfoArrayCol;

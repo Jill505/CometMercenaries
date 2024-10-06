@@ -56,6 +56,10 @@ MonoBehaviour:
   - NodeSort: 0
     MapXNum: 0
     MapYNum: 0
+    chunkX: 1
+    chunkY: 1
+    NodeTransformX: 0
+    NodeTransformY: 0
     linkingNodesSort: 
     ChunkInfoArrayCol:
     - chunkRow:
@@ -64,54 +68,75 @@ MonoBehaviour:
         myViolentEnergy: 1
         chunkType: defultChunkType
         itemFieldProvideNumber: 0
+        itemContext: []
       - myX: 0
         myY: 0
         myViolentEnergy: 1
         chunkType: defultChunkType
         itemFieldProvideNumber: 0
+        itemContext: []
       - myX: 0
         myY: 0
         myViolentEnergy: 1
         chunkType: defultChunkType
         itemFieldProvideNumber: 0
+        itemContext: []
     - chunkRow:
       - myX: 0
         myY: 0
         myViolentEnergy: 1
         chunkType: defultChunkType
         itemFieldProvideNumber: 0
+        itemContext: []
       - myX: 0
         myY: 0
         myViolentEnergy: 1
         chunkType: defultChunkType
         itemFieldProvideNumber: 0
+        itemContext: []
       - myX: 0
         myY: 0
         myViolentEnergy: 1
         chunkType: defultChunkType
         itemFieldProvideNumber: 0
+        itemContext: []
     - chunkRow:
       - myX: 0
         myY: 0
         myViolentEnergy: 1
         chunkType: defultChunkType
         itemFieldProvideNumber: 0
+        itemContext: []
       - myX: 0
         myY: 0
         myViolentEnergy: 1
         chunkType: defultChunkType
         itemFieldProvideNumber: 0
+        itemContext: []
       - myX: 0
         myY: 0
         myViolentEnergy: 1
         chunkType: defultChunkType
         itemFieldProvideNumber: 0
+        itemContext: []
+    chunkAlldata: []
+    alreadyLoadingChunkInfo:
+      chunkX: 0
+      chunkY: 0
+      chunkInfomationType: nullInfo
+      mobName: defult_Mob
+      itemContext: []
     nodeType: nonType
     nodeFaction: myFaction
     nodeName: "\u96F6\u865F\u7BC0\u9EDE"
+    nodePictureName: Defult Picture Name
   - NodeSort: 1
     MapXNum: 0
     MapYNum: 0
+    chunkX: 1
+    chunkY: 1
+    NodeTransformX: 0
+    NodeTransformY: 0
     linkingNodesSort: 0200000000000000
     ChunkInfoArrayCol:
     - chunkRow:
@@ -120,46 +145,76 @@ MonoBehaviour:
         myViolentEnergy: 0
         chunkType: 
         itemFieldProvideNumber: 0
+        itemContext: []
       - myX: 0
         myY: 0
         myViolentEnergy: 0
         chunkType: 
         itemFieldProvideNumber: 0
+        itemContext: []
       - myX: 0
         myY: 0
         myViolentEnergy: 0
         chunkType: 
         itemFieldProvideNumber: 0
+        itemContext: []
     - chunkRow:
       - myX: 0
         myY: 0
         myViolentEnergy: 0
         chunkType: 
         itemFieldProvideNumber: 0
+        itemContext: []
       - myX: 0
         myY: 0
         myViolentEnergy: 0
         chunkType: 
         itemFieldProvideNumber: 0
+        itemContext: []
       - myX: 0
         myY: 0
         myViolentEnergy: 0
         chunkType: 
         itemFieldProvideNumber: 0
+        itemContext: []
+    chunkAlldata: []
+    alreadyLoadingChunkInfo:
+      chunkX: 0
+      chunkY: 0
+      chunkInfomationType: nullInfo
+      mobName: defult_Mob
+      itemContext: []
     nodeType: nonType
     nodeFaction: nonFaction
     nodeName: "\u5C0F\u5E74\u591C"
+    nodePictureName: Defult Picture Name
   - NodeSort: 2
     MapXNum: 0
     MapYNum: 0
+    chunkX: 1
+    chunkY: 1
+    NodeTransformX: 0
+    NodeTransformY: 0
     linkingNodesSort: 01000000
     ChunkInfoArrayCol: []
+    chunkAlldata: []
+    alreadyLoadingChunkInfo:
+      chunkX: 0
+      chunkY: 0
+      chunkInfomationType: nullInfo
+      mobName: defult_Mob
+      itemContext: []
     nodeType: nonType
     nodeFaction: nonFaction
     nodeName: "\u5C0F\u6C8F\u6D1B"
+    nodePictureName: Defult Picture Name
   - NodeSort: 3
     MapXNum: 0
     MapYNum: 0
+    chunkX: 1
+    chunkY: 1
+    NodeTransformX: 0
+    NodeTransformY: 0
     linkingNodesSort: 01000000
     ChunkInfoArrayCol:
     - chunkRow:
@@ -168,12 +223,25 @@ MonoBehaviour:
         myViolentEnergy: 0
         chunkType: 
         itemFieldProvideNumber: 0
+        itemContext: []
+    chunkAlldata: []
+    alreadyLoadingChunkInfo:
+      chunkX: 0
+      chunkY: 0
+      chunkInfomationType: nullInfo
+      mobName: defult_Mob
+      itemContext: []
     nodeType: nonType
     nodeFaction: nonFaction
     nodeName: "\u8D0B\u9E7F\u838A"
+    nodePictureName: Defult Picture Name
   - NodeSort: 4
     MapXNum: 0
     MapYNum: 0
+    chunkX: 1
+    chunkY: 1
+    NodeTransformX: 0
+    NodeTransformY: 0
     linkingNodesSort: 01000000
     ChunkInfoArrayCol:
     - chunkRow:
@@ -182,17 +250,34 @@ MonoBehaviour:
         myViolentEnergy: 0
         chunkType: 
         itemFieldProvideNumber: 0
+        itemContext: []
     - chunkRow:
       - myX: 0
         myY: 0
         myViolentEnergy: 0
         chunkType: 
         itemFieldProvideNumber: 0
+        itemContext: []
       - myX: 0
         myY: 0
         myViolentEnergy: 0
         chunkType: 
         itemFieldProvideNumber: 0
+        itemContext: []
+    chunkAlldata:
+    - chunkContext:
+      - chunkX: 2
+        chunkY: 3
+        chunkInfomationType: 
+        mobName: 
+        itemContext: []
+    alreadyLoadingChunkInfo:
+      chunkX: 0
+      chunkY: 0
+      chunkInfomationType: nullInfo
+      mobName: defult_Mob
+      itemContext: []
     nodeType: nonType
     nodeFaction: nonFaction
     nodeName: "\u8AFE\u59B2\u7684\u8001\u5BB6"
+    nodePictureName: Defult Picture Name

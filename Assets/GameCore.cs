@@ -131,6 +131,9 @@ public class Mercenaries
     public Gear FootGear;//腳部裝備
     public Gear tokenGear;//信物
 
+    //遊戲內數據
+    public float inGameSpeedHit = 100;//預設為100
+    public float inGameSpeed = 0;
 
     //角色職業技能
     public float characterPropotyPoints = 4;
@@ -152,6 +155,9 @@ public class Mercenaries
     public float violentEnergyRadius = 2;
     public float gameSpeed = 0;//遊戲內速度 用於計算
     public float violentEnergyPointws = 0;
+
+    public int actionPoints = 0;
+    public int getActionPoints = 2;
 
     public delegate void voidDelegate();
     public voidDelegate gearCalDeleate; 
@@ -316,8 +322,11 @@ public class SaveSystem
                 foreach (NodeFile NF in GameCore.Camp.tempWorldMapNodeFile)
                 {
                     //Debug.Log("載入節點中");
+                    //生成節點
                     GameObject nodeObject = new GameObject("Node_" + counter);
                     Node swapNode = nodeObject.AddComponent<Node>();
+
+                    nodeObject.AddComponent<SpriteRenderer>();
 
                     GameCore.Camp.nodeGameObjecgts.Add(nodeObject);
 
@@ -326,15 +335,45 @@ public class SaveSystem
                     swapNode.MapXNum = NF.MapXNum;
                     swapNode.MapYNum = NF.MapYNum;
 
+                    swapNode.NodeTransformX = NF.NodeTransformX;
+                    swapNode.NodeTransformY = NF.NodeTransformY;
+
                     swapNode.chunkInfo = NF.chunkInfo;
                     swapNode.chunkViolentEnergyInfo = NF.chunkViolentEnergyInfo;
                     swapNode.ChunkInfoArrayCol = NF.ChunkInfoArrayCol;
+
+                    swapNode.chunkX = NF.chunkX;
+                    swapNode.chunkY = NF.chunkY;
 
                     swapNode.NodeSort = NF.NodeSort;
 
                     swapNode.nodeType = NF.nodeType;
                     swapNode.nodeFaction = NF.nodeFaction;
                     swapNode.nodeName = NF.nodeName;
+
+                    swapNode.nodePictureName = NF.nodePictureName;
+
+                    //設定關卡圖標
+                    SpriteRenderer sr = nodeObject.AddComponent<SpriteRenderer>();
+                    SpriteRenderer spriteRendererSwap = swapNode.GetComponent<SpriteRenderer>();
+                    if (swapNode.nodePictureName == "" || swapNode.nodePictureName == "Defult Picture Name")
+                    {
+                        //Load Defult Picture
+                        spriteRendererSwap.sprite = Resources.Load<Sprite>("Defult Picture Name");
+                    }
+                    else
+                    {
+                        //Load itself's picture
+                        spriteRendererSwap.sprite = Resources.Load<Sprite>(swapNode.nodePictureName);
+                    }
+                    //依照勢力顏色設定關卡顏色
+                    //記得寫
+
+                    //給予碰撞體
+                    Collider2D col2d = nodeObject.AddComponent<BoxCollider2D>();
+
+                    //設定節點座標
+                    nodeObject.transform.position = new Vector2(swapNode.NodeTransformX,swapNode.NodeTransformY);
 
                     GameCore.Camp.worldMapNodeList.Add(swapNode);
 
@@ -577,4 +616,30 @@ public class chunk
         }
         itemContext = itemSwap.ToArray();
     }
+}
+[System.Serializable]
+public class chunkInfos
+{
+    public chunkInfo[] chunkContext;
+}
+
+[System.Serializable]
+public class chunkInfo
+{
+    public int chunkX = 0;
+    public int chunkY = 0;
+
+    public string chunkInfomationType = "nullInfo";
+    //nullInfo = 預設資料
+    //boxLv1 = 箱子等級1
+    //boxLv2 = 箱子等級2
+
+    //Mobs = 敵人
+    //Boss = 首領
+    public string mobName = "defult_Mob";
+    //defult_Mob = 木樁
+    //後續增加怪物類型與AI功能時 逐漸載入資料 建立原型怪物 每次生成時直接套內容就好
+
+    public Item[] itemContext = new Item[0];
+    //item內容物 用於資料載入時的內容
 }
